@@ -96,7 +96,9 @@ Los atributos pueden o no aceptar valores (nulos), según como se diseñe el atr
 
 ## Identificador Unico (ID)
 
-El ID es un atributo que representa al registro. Si se quiere hacer un llamado del registro, se puede optar por utilizar el ID por cuestiones de eficiencia en la programación. Se representa con un subrayado al nombre del atributo.
+El ID es un atributo que representa al registro. Si se quiere hacer un llamado del registro, se puede optar por utilizar el ID por cuestiones de eficiencia en la programación. Se representa con un subrayado al nombre del atributo. 
+
+Presenta caracteristicas como unico, no nulo, inmutable (no cambiar), puede ser alfanumerico o numerico, en la mayoria de casos es autoincremental si es numerico (ej: en cada registro nuevo automaticamente incrementa 1, 2, 3...)
 
 ![](imgs/clase-1/atributos-clasificaciones/id.png)
 
@@ -110,13 +112,13 @@ Las relaciones establecen como se asocian las entidades. Se hace uso del teorema
 > 
 > La cardinalidad se refiere ala cantidad de instancias que pueden vincularse a una relación. Esta puede ser de diferentes tipos:
 > 
-> - **Uno a uno (1->1)**: Cada registro en una tabla está relacionado con un solo registro en otra tabla.
+> - **Uno a uno (1->1)**: Un registro de la primera tabla le corresponde como máximo un registro en la segunda tabla, y viceversa.
 > 
-> - **Uno a muchos (1->N)**: Un registro en una tabla puede estar relacionado con múltiples registros en otra tabla.
+> - **Uno a muchos (1->N)**: Un registro de la primera tabla le pueden corresponder muchos registros en la segunda tabla, pero cada registro de la segunda tabla solo tiene un registro asociado en la primera tabla.
 > 
-> - **Muchos a muchos (N->N)**: Múltiples registros en una tabla pueden estar relacionados con múltiples registros en otra tabla.
-> 
-> - **Muchos a uno (N->1)**: Multiples registros estan relacionados 
+> - **Muchos a uno (N->1)**: Muchos registros de la primera tabla pueden estar asociados a un solo registro de la segunda tabla.
+>
+> - **Muchos a muchos (N->N)**: Muchos registros de la primera tabla pueden estar relacionados con muchos registros de la segunda tabla, y viceversa.
 > 
 > En el DER se debe indicar al lado de cada entidad el tipo de Cardinalidad. Ejemplo:
 > 
@@ -124,7 +126,7 @@ Las relaciones establecen como se asocian las entidades. Se hace uso del teorema
 
 > **Restricción de Participación**
 > 
-> Indica si es o no obligatorio que exista la relación para los registros
+> Indica si es necesario que cada registro este relacionado si o si con otra entidad, o no.
 > 
 > - **Total**: Todos los elementos de la entidad deben participar en la relación
 > - **Parcial** No todos los elementos de la entidad deben participar
