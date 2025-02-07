@@ -18,7 +18,15 @@
   - [Equivalencia de Relación Ternaria y Binarias](#equivalencia-de-relación-ternaria-y-binarias)
   - [Relaciones Transitivas](#relaciones-transitivas)
 - [Clase 2 - Practica DER](#clase-2---practica-der)
-- [Clase 3](#clase-3)
+- [Clase 3 - Modelo Relacional (MR)](#clase-3---modelo-relacional-mr)
+  - [Etapas del Diseño](#etapas-del-diseño)
+  - [Definición](#definición)
+  - [Entidad](#entidad)
+  - [Atributos](#atributos)
+  - [Relaciones y Cardinalidad](#relaciones-y-cardinalidad)
+  - [Entidades debiles](#entidades-debiles)
+  - [Jerarquia](#jerarquia)
+  - [Atributos en la Relacion](#atributos-en-la-relacion)
 - [Clase 4](#clase-4)
 - [Clase 5](#clase-5)
 - [Clase 6](#clase-6)
@@ -195,11 +203,119 @@ Hay que tener cuidado con las relaciones que se crean, la creación de cada una 
 > 
 > En este caso, se quiere consultar en que pais nacio el alumno. Saber en el pais que pertenece la universidad, no es condición necesaria para que alumno sea del mismo (puede ser extranjero). Por lo que es valido crear una relación.
 
+---
+
 # Clase 2 - Practica DER
 
 ---
 
-# Clase 3
+# Clase 3 - Modelo Relacional (MR)
+
+## Etapas del Diseño
+
+1. Analisis de Requerimientos
+2. Modelo Conceptual (DER)
+3. Modelo Logica (MR)
+4. Modelo Fisico (Script)
+
+## Definición
+
+Permite representar del DER con un modelo Logica por medio de un Modelo Relacional. El mismo, se basa principalmente en el uso de tablas y sus relaciones. Se tienen los siguientes conceptos:
+- Tabla = Entidades = Relacion
+- Filas = Registros = Tuplas = Datos
+- Columans = Atributos
+- Grados = Cant Columnas
+
+## Entidad
+
+> - **Entidades o Tablas**
+> 
+> Se escriben con el formato: \[**NOMBRE TABLA**]( \[**ATRIBUTOS**] ). Ejemplo:
+> ![](imgs/clase-3/MR.png)
+> 
+
+## Atributos
+
+> - **Atributos Clave** 
+>
+> Una _llave foranea_, es un atributo clave primaria que le pertenece a otra tabla que se encuentra relacionada con la misma. La _llave primaria_ es un ID o clave propia de la tabla.
+> 
+> - Llave Primaria (PK), Unico o Clave = Subrayado
+> - Llave Foranea (FK) o clave externa = Subrayado en rayas
+> - FK y PK = subrayado de doble linea
+
+> - **Multivaluados**
+>  
+> Se utiliza una tabla aparte con los valores posibles. Ejemplo:
+> ![](imgs/clase-3/Multivaluado.png)
+
+> - **Compuestos** 
+>  
+> Se añaden como atributos comunes de la tabla principal
+> ![](imgs/clase-3/Compuesto.png)
+
+> - **Derivado**
+>
+> El derivado no se pasa ni como atributo ni como tabla 
+
+## Relaciones y Cardinalidad
+
+Vamos a ver que ocurre con las relaciones con su respectiva cardinalidad
+
+> - **Binarias**
+> 
+> - N->N: Siempre se crea una nueva tabla
+> 
+> - N->1 o 1->N: Se crea un nuevo atributo en la tabla con cardilanidad N, con las claves primarias (clave foranea en este caso) de la otra tabla de cardilanidad 1.
+> 
+> - 1->1: Elegis en cualquiera de las dos tablas y agregas los atributos con las llaves foraneas de la otra pero con el agregado que son de tipo unica
+
+> - **Unarias**
+> 
+> - N->N: Siempre se crea una nueva tabla
+>
+> - 1->N, N->1 ó 1->1: Los resultados son iguales y su existencia no tiene mucho sentido. Simplemente se agrega un atributo a la tabla relacionada que haga referencia a la relacion unaria. 
+
+> - **Ternaria**
+> 
+> La ternaria siempre genera otra tabla compuesta con llaves foraneas de las tablas relacionadas 
+>
+> - N->N->N: Las tres entidades tienen una participación múltiple (N) en la relación. Para esto, todas las claves seran PK.
+> 
+> - N->N->1: Significa que una de las entidades tiene una participación única (1), y las otras dos tienen una participación múltiple (N). Solo las N seran PK, la de 1 seran solo FK. 
+> 
+> - N->1->1: Las de participación N seran PK y se elige tambien como PK una de las dos claves 1. La otra que no fue elegida sera solo FK.
+>
+> - 1->1->1: Cada instancia de la relación ternaria está asociada exactamente con una instancia de cada una de las tres entidades. Se eligen 2 cualquiera para sean PK, la restante solo sera FK.
+
+## Entidades debiles
+
+La debil se expresa igual que el atributo multivaluado; Se crea una tabla para la entidad debil, se crea un nuevo atributo para la clave primaria de la fuerte (llave foranea) y se añaden los atributos pertenecientes a la entidad debil.
+
+![](imgs/clase-3/debil.png)
+
+## Jerarquia
+
+Hay 2 maneras de unir las jerarquias:
+> Una de ellas es que crear una tabla diferente para cada entidad hijo y padre, con sus respectivos atributos heredados y dados. Este metodo funciona para cualquier tipo de jerarquia, pero es muy ineficiente.
+>
+> Este metodo tiene la ventaja de puede ocupar menos espacio que el otro, pero requiere un mantenimiento y complejidad mucho mayor.
+
+> La otra manera, consta  de crear en una unica tabla toda la jerarquia en sí. Es el metodo ideal, pero solo funciona en casos especificos.
+>
+> Puede ocuparte un poco mas de espacio, pero a dia de hoy no es mucho problema, aparte que te realiza un labor mas facil. Razon por la que es recomendado por el profesor.
+
+![](imgs/clase-3/jerarquia1.png)
+
+## Atributos en la Relacion
+
+En este capitulo habla sobre como se comportan las relaciones que tienen atributos. Ejemplo (aula):
+
+![](imgs/clase-3/atributos-relacion.png)
+
+- **N->N**: Se crea un nuevo atributo en la tabla ya creada.
+- **1->N ó N->1**: Se agregará el atributo en la relación con cardinalidad N.
+- **1->1**: Se transpasan todos atributo nuevo y claves foraneas a cualquiera de las 2 tablas. Si hay alguna con opcionalidad, entonces se elige la que no la tiene.
 
 ---
 
