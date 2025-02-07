@@ -266,7 +266,7 @@ Vamos a ver que ocurre con las relaciones con su respectiva cardinalidad
 > 
 > - N->N: Siempre se crea una nueva tabla
 > 
-> - N->1 o 1->N: Se crea un nuevo atributo en la tabla con cardilanidad N, con las claves primarias (clave foranea en este caso) de la otra tabla de cardilanidad 1.
+> - N->1 o 1->N: Se crea un nuevo atributo en la tabla con cardilanidad N, con las claves foraneas de la otra tabla de cardilanidad 1.
 > 
 > - 1->1: Elegis en cualquiera de las dos tablas y agregas los atributos con las llaves foraneas de la otra pero con el agregado que son de tipo unica
 
