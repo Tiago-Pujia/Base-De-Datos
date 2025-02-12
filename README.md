@@ -372,7 +372,15 @@ Dependencias:
 
 Claves candidatas = {LEGAJO, DNI}
 
-Las superclaves indica que datos podemos obtener apartir de los otros atributos.
+Las **superclaves** son aquellos atributos que nos sirven para obtener todos los atributos de la tabla. Por ejemplo:
+
+Superclaves = { Legajo, Nombre ;
+                DNI, Nombre ;
+                Legajo, DNI ;
+                Legajo, Nombre, DNI ;
+                Legajo ;
+                DNI 
+              }
 
 ## Axiomas de Armstrong
 
