@@ -27,7 +27,17 @@
   - [Entidades debiles](#entidades-debiles)
   - [Jerarquia](#jerarquia)
   - [Atributos en la Relacion](#atributos-en-la-relacion)
-- [Clase 4](#clase-4)
+- [Clase 4 - Normalizacion](#clase-4---normalizacion)
+  - [Definicion](#definicion)
+  - [Dependencias Funcionales](#dependencias-funcionales)
+  - [Dependencias Funcionales Triviales](#dependencias-funcionales-triviales)
+  - [Claves](#claves)
+  - [Axiomas de Armstrong](#axiomas-de-armstrong)
+  - [Axiomas Adicionalas/Derivadas](#axiomas-adicionalasderivadas)
+  - [Clausura de un Conjunto de Dependencias (F+)](#clausura-de-un-conjunto-de-dependencias-f)
+  - [Clausura de un Conjunto de Atributos (X+)](#clausura-de-un-conjunto-de-atributos-x)
+  - [Equivalencias de Conjuntos](#equivalencias-de-conjuntos)
+  - [Conjunto Minimo de Dependencias Funcionales (Fmin)](#conjunto-minimo-de-dependencias-funcionales-fmin)
 - [Clase 5](#clase-5)
 - [Clase 6](#clase-6)
 - [Clase 7](#clase-7)
@@ -319,7 +329,177 @@ En este capitulo habla sobre como se comportan las relaciones que tienen atribut
 
 ---
 
-# Clase 4
+# Clase 4 - Normalizacion
+
+## Definicion
+
+La Normalización es un proceso mediante el cual se puede depurar un diseño de base de datos. Permite eliminar ciertos defectos y características indeseables de los esquemas. Algunos de los problemas que resuelve:
+- EDUNDANCIA
+- ANOMALIAS DE ACTUALIZACIÓN
+- ANOMALIAS DE INSERCIÓN
+- ANOMALIAS DE ELIMINACIÓN
+- PERDIDA DE INFORMACIÓN
+
+## Dependencias Funcionales
+
+Los atributos se van a representan con variables, como "x", "y", "z" o "w". La dependencia se representan con flechas, como X->Y, se lee "X determina Y".
+
+Ejemplo:
+
+EXAMEN(DNI, NOMBRE, APELLIDO, COD_MATERIA, NOMBRE_MATERIA, FECHA,NOTA)
+
+Las dependencias de la tabla:
+
+- DNI -> NOMBRE, APELLIDO
+- COD_MATERIA -> NOMBRE_MATERIA
+- DNI, COD_MATERIA, FECHA -> NOTA
+
+## Dependencias Funcionales Triviales 
+
+Decimos que una dependencia funcional es Trivial cuando es obvia. Por ejemplo X->X.
+
+Todo conjunto de atributos se determina a si mismo o a un conjunto de atributos menor (que este contenido en el primero). XY -> X
+
+## Claves
+
+Se determinan las claves candidatas apartir de la parte izquierda de las dependencias. Por ejemplo:
+
+EMPLEADO(LEGAJO, NOMBRE, DNI)
+
+Dependencias:
+- LEGAJO -> NOMBRE, DNI
+- DNI -> NOMBRE, LEGAJO
+
+Claves candidatas = {LEGAJO, DNI}
+
+Las superclaves indica que datos podemos obtener apartir de los otros atributos.
+
+## Axiomas de Armstrong
+
+- Reflexividad
+
+Si Y _C_ X => X->Y
+
+- Aumento
+
+X->Y Se puede inferir XZ -> YZ
+
+- Transitivdad
+
+X->Y y Y->Z => X->Z
+
+## Axiomas Adicionalas/Derivadas
+
+- Descomposición
+
+X->YZ => X->Y y X->Z
+
+- Union
+
+X->Y y X->Z => X->YZ
+
+- Pseudotransitivdad
+
+X->Y y WY->Z => WX->Z
+
+## Clausura de un Conjunto de Dependencias (F+)
+
+Todas las dependencias triviales + Axiomos Armstrong + Dependencias Inferiras
+
+![](imgs/clase-4/clausura-dependencias.png)
+
+No se pide esto en ejercicios de todas maneras
+
+## Clausura de un Conjunto de Atributos (X+)
+
+Indica todos los atributos que se pueden encontrar apartir de un conjunto de dependencias.
+
+![](imgs/clase-4/clausura-atributos.png)
+
+## Equivalencias de Conjuntos
+
+Se nos presentan dos conjuntos de atributos, debemos determinar por medio de los axiomas si son equivalentes. 
+
+Dos conjuntos son equivalentes si sus clausuras Dependiente son iguales. Para probar que dos conjuntos son equivalentes, sin necesidad de calcular la clausura dependiente, se debería probar que toda dependencia de F puede inferirse en G (F C G+), y recíprocamente, toda dependencia de G se puede inferir en F (G C F+ ):
+
+> F _C_ G+ y G _C_ F+
+
+Ejemplo:
+
+> R (A, B, C, D)
+> 
+> F = { A->B, A->C, B->A, D->A }
+>  
+> G = { D->ABC, B->A, B->C, A->B }
+
+> **Elemento 1 (F: A->B)**
+>
+> Ya hay un elemento identico en G
+>
+
+> **Elemento 2 (F: A->C)**
+>
+> Apartir del elemento 3 y 4 se puede encontrar la dependencia:
+>
+> A->B y B->C = A->C
+
+> **Elemento 3 (F: B->A)**
+>
+> Ya hay un elemento identico en G
+>
+
+> **Elemento 4 (F: D->A)**
+>
+> Para esto, utilizamos el primer elemento
+>
+> D->**A**BC
+
+## Conjunto Minimo de Dependencias Funcionales (Fmin)
+
+Inverso de F+, se debe bajar al minimo las dependencias funcionales. Un conjunto de dependencias funcionales es Mínimo si cumple las siguientes tres condiciones:
+- Todas sus dependencias funcionales tienen un solo atributo en su parte derecha (determinado).
+- No podemos reemplazar ninguna dependencia funcional X->A por otra Y->A, donde Y C X, y seguir teniendo un conjunto equivalente.
+- No podemos quitarle ninguna dependencia funcional y seguir teniendo un conjunto equivalente. 
+
+Para transformar un conjunto a Fmin, se tienen 3 pasos:
+
+> **1. Minimización de Atributos en el Lado Derecho**
+>
+> Debe haber un solo atributo del lado derecho de la dependencia. Para esto, se descomponen en independencias individuales
+>
+> A->BC => A->B y A->C
+
+> **2.  Minimización de Atributos en el Lado Derecho** 
+> 
+> Para cada independencias de 2 o mas atributos claves. Obtener la clausura de atributos de cada uno. Se verifica que se puede llegar a la parte izquierda, sin necesidad del otro atributo clave. Si es así se elimine el sobrante
+>
+> { AB->C, A->C } => { A->C }
+
+> **3. Eliminar Dependencias Redundantes**
+>
+> Una dependencia funcional es redundante si se puede derivar a partir de las otras dependencias en el conjunto.
+>
+> {A->B, B->C, A->C} => A->C es redundante porque se obtiene como A->B->C => {A->B, B->C}
+
+Ejemplo:
+
+> R(ABCDE) F={A->BCD, AB->DE, BE->AC}
+
+> **1. Minimización de Atributos en el Lado Derecho**
+>
+> F1 = { {A->B, A->C, A->D}, {AB->D, AB->E}, {BE->A, BE->C} }
+
+> **2.  Minimización de Atributos en el Lado Derecho** 
+>
+> ![](imgs/clase-4/minimizar-derecho.png)
+>  
+> F2 = {A→B, A→C, A→D, A→E, BE→A, BE→C }
+
+> **3. Eliminar Dependencias Redundantes**
+> 
+> El unico que se elimina es A→C. Debido a que ya se puede obtener como A->B + A->E = BE->C
+>  
+> F3 = { A→B, A→D, A→E, BE→A, BE→C }
 
 ---
 
