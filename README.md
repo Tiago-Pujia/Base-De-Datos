@@ -41,15 +41,11 @@
 - [Clase 5 - Normalización 2](#clase-5---normalización-2)
   - [Conceptos](#conceptos)
   - [Formas Normales](#formas-normales)
-  - [Pérdida de Datos](#pérdida-de-datos)
-    - [Pérdida de Dependencias](#pérdida-de-dependencias)
-    - [Pérdida de Información](#pérdida-de-información)
+  - [Algoritmo de Perdidas de Dependencias](#algoritmo-de-perdidas-de-dependencias)
   - [Algoritmos de Descomposición](#algoritmos-de-descomposición)
     - [Algoritmo de 3FN:](#algoritmo-de-3fn)
     - [Algoritmo de FNBC](#algoritmo-de-fnbc)
   - [Algoritmo de Perdidas de Información](#algoritmo-de-perdidas-de-información)
-    - [Método Tableu](#método-tableu)
-    - [Teorema de Health](#teorema-de-health)
 - [Clase 6 - Clase de Consulta](#clase-6---clase-de-consulta)
 - [Clase 7](#clase-7)
 - [Clase 8](#clase-8)
@@ -595,11 +591,9 @@ Cada dependencia puede ser de una forma diferente, y la dependencia mas baja det
 >
 > La dependencia con su forma minima es 1FN. Por lo que, la tabla tiene forma 1FN.
 
-## Pérdida de Datos
+## Algoritmo de Perdidas de Dependencias
 
 El problema de la descompoción es que se puede tener perdidas de dependencias funcionales e información. Por lo que por seguridad, se debe verificar las estructuras y registros.
-
-### Pérdida de Dependencias
 
 Se dice que una descomposición conserva todas sus dependencias funcionales si: 
 ~~~
@@ -627,10 +621,6 @@ La union de las dependencias funcionales de todas las tablas descompuesto es equ
 > 
 > Por lo que, no hubo perdida de DF
 
-### Pérdida de Información
-
-En toda descomposición, cada registro debería poder reconstruirse. Si no pudiera reconstruirse se dice que esa descomposición es inválida. Se pueden perder registros o crear registros de más.
-
 ## Algoritmos de Descomposición
 
 Existen 2 algoritmos con caracteristicas propias:
@@ -645,11 +635,11 @@ Existen 2 algoritmos con caracteristicas propias:
 
 ### Algoritmo de 3FN:
 
-1. Calcular Fmin
-2. Construir nuevas tablas apartir de separar las dependencias con la parte izquierda en comun
-3. En caso que en ninguna relación se encuentra la CC Global de Fmin, se crea una nueva tabla con la misma
-4. Eliminar relaciones redundantes
-5. Verificamos las formas
+1. **Calcular Fmin**
+2. **Descomponer** la relación en nuevas tablas, separando las dependencias que comparten la misma parte izquierda.
+3. **Verificar** si la clave candidata global de Fmin está presente en alguna tabla. Si no es así, se debe crear una nueva relación que la contenga.
+4. **Eliminar** relaciones redundantes
+5. **Verificar** que las relaciones cumplen con la Tercera Forma Normal (3FN).
 
 > - **Ejemplo:**
 > 
@@ -713,16 +703,46 @@ Existen 2 algoritmos con caracteristicas propias:
 
 ## Algoritmo de Perdidas de Información
 
-Existen 2 algoritmos con caracteristicas propias:
+En toda descomposición, cada registro debería poder reconstruirse. Si no pudiera reconstruirse se dice que esa descomposición es inválida. Se pueden perder registros o crear registros de más. Existe el algoritmo de Tableau para verificar la perdida de información con N cantidad de relaciones
 
-- **Método Tableu:**
-  - Se utiliza para verificar con N cantidad de relaciones
-- **Teorema de Health:**
-  - Funciona unicamente con 2 relaciones
+1. Se crea una matriz en la que cada fila representa una tabla descompuesta y cada columna corresponde a un atributo.
+2. Se rellenan las celdas de la matriz de la siguiente manera:
+    - Para los atributos presentes en la relación, se asigna la letra "a" seguida del número de la columna.
+    - Para los atributos ausentes en la relación, se coloca una "b" seguida del número de fila y columna.
+3. Se inicia un bucle iterando sobre el conjunto de dependencias funcionales hasta que no se puedan realizar más cambios o se obtenga una fila compuesta únicamente por valores "a" al finalizar el bucle. Para aplicar el algoritmo, se sigue el siguiente procedimiento:
+   1. Se seleccionan las columnas correspondientes a los atributos del lado izquierdo de la dependencia funcional (X), y se verifica si almenos dos filas tienen valores iguales en esas columnas (ya sean "a" o "b" con su respectivo numero de fila y columna). Si no son iguales, se pasa a la siguiente dependencia.
+   2. Si las filas son iguales en X, se evalúa la columna del atributo dependiente (Y):
+        - Si al menos una de las filas coincidentes tiene la letra "a", se reemplazan los valores de las demás filas coincidentes con "a".
+        - Si ninguna fila tiene "a", se igualan los valores de fila y columna asociados a la letra "b" en las filas afectadas.
 
-### Método Tableu
+![](imgs/clase-5/Tableu.jpg)
 
-### Teorema de Health
+**Notas:**
+- Una b nunca puede pisar la letra a. Como a su vez, la letra solo puede ser pisada por la a y solo modificada por la b
+- Como se puede aprecia en el algoritmo. Si una columna esta compuesta solo por la letra b, automaticamente hay perdida de informacion
+
+> - **Ejemplo**
+>
+> R(ABCDEFG) con F = { BC → E, CE → F, BFE → D, DG → F, EF → C, A → D, ADF → G }
+>
+> 1. ***Crear matriz***
+> 
+> |    | A  | B  | C  | D  | E  | 
+> |----|----|----|----|----|----| 
+> | R1 |    |    |    |    |    | 
+> | R2 |    |    |    |    |    | 
+> | R3 |    |    |    |    |    | 
+>
+> 2. ***Rellenar Matriz***
+> 
+> |    | A  | B  | C  | D  | E  | 
+> |----|----|----|----|----|----| 
+> | R1 | a1 | a2 | a3 | b14| b15| 
+> | R2 | b21| b22| a3 | a4 | b25| 
+> | R3 | a1 | b32| b33| a4 | a5 | 
+>
+> 3. ***Recorrido de las Dependencias***
+> 
 
 ---
 
